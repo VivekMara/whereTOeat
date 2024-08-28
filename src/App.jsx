@@ -17,7 +17,7 @@ export default function App() {
 
   async function response(){
     try {
-      const request = await axios.get(`https://api.olamaps.io/places/v1/nearbysearch?layers=venue&types=restaurant&location=${lat}%2C${lng}&radius=6000&strictbounds=false&withCentroid=false&limit=1&api_key=SoAzKWcK3PzwIdBSBJ9psGevuIXpdVaUq43BiRQf`)
+      const request = await axios.get(`https://api.olamaps.io/places/v1/nearbysearch?layers=venue&types=restaurant&location=${lat}%2C${lng}&radius=6000&strictbounds=false&withCentroid=false&limit=1&api_key=${import.meta.env.VITE_API_KEY}`)
       const data = request.data.predictions;
       console.log(data)
       const listplaces = data.map(place => <li key={place.place_id}><h1>{place.description}</h1></li>);
