@@ -31,7 +31,7 @@ export default function App() {
   return (
     <>
     <div className="flex flex-col items-center border-2 p-3 rounded-xl">
-      <h1 className="text-2xl font-bold">whatTOeat</h1>
+      <h1 className="text-2xl font-bold">whereTOeat</h1>
       <br />
       <button onClick={() => {locate()}} className="border-2 rounded-xl p-2 m-1 bg-gradient-to-r from-cyan-400 to-sky-500 hover:scale-105">Get location</button>
       <h1>latitude : {lat}</h1>
