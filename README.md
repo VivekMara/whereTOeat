@@ -1,3 +1,3 @@
 # whatTOeat
 
-suggest random places to eat and explore while confusions
+suggest random places to eat and explore when confused
