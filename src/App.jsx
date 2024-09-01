@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios"
+import ClipLoader from "react-spinners/ClipLoader";
+
 
 
 export default function App() {
@@ -7,10 +9,12 @@ export default function App() {
   const [lat,setLat] = useState(null)
   const [lng,setLng] = useState(null)
   const [status, setStatus] = useState(null)
+  const [accuracy, setAccuracy] = useState(null)
+  const [isResponseLoading, setIsResponseLoading] = useState(false);
+  const [isLocationLoading, setIsLocationLoading] = useState(false);
 
-  
   function locate(){
-    navigator.geolocation.getCurrentPosition((position) => {setLat(position.coords.latitude), setLng(position.coords.longitude)}, (err) => {setMsg(err)});
+    navigator.geolocation.getCurrentPosition((position) => {setLat(position.coords.latitude), setLng(position.coords.longitude), setAccuracy(position.coords.accuracy), setIsLocationLoading(false)}, (err) => {setMsg(err)});
   }
   
 
@@ -24,6 +28,8 @@ export default function App() {
       setStatus(request.data.status)
     } catch (error) {
       setMsg(error.response.data.info_messages[0])
+    } finally{
+      setIsResponseLoading(false)
     }
   }
 
@@ -33,17 +39,22 @@ export default function App() {
     <div className="flex flex-col items-center border-2 p-3 rounded-xl">
       <h1 className="text-2xl font-bold">whereTOeat</h1>
       <br />
-      <button onClick={() => {locate()}} className="border-2 rounded-xl p-2 m-1 bg-gradient-to-r from-cyan-400 to-sky-500 hover:scale-105">Get location</button>
-      <h1>latitude : {lat}</h1>
+      <button onClick={() => {locate() && setIsLocationLoading(!isLocationLoading)}} className="border-2 rounded-xl p-2 m-1 bg-gradient-to-r from-cyan-400 to-sky-500 hover:scale-105">
+        {isLocationLoading ? "Getting location..." : "Get Location"}
+      </button>
+      <h1>latitude :{lat}</h1>
       <h1>longitude : {lng}</h1>
     </div>
     
     <div className="flex flex-col p-3">
-      <button onClick={() => response()} className="border-2 rounded-xl p-2 m-1 bg-gradient-to-r from-cyan-400 to-sky-500 hover:scale-105">Get restaurants</button>
-      <div className="flex flex-col gap-3">{msg}</div>
+      <button onClick={() => response() && setIsResponseLoading(!isResponseLoading)} className="border-2 rounded-xl p-2 m-1 bg-gradient-to-r from-cyan-400 to-sky-500 hover:scale-105">{isResponseLoading ? "Loading restaurants..." : "Get restaurants"}</button>
+      <div className="flex flex-col gap-3">
+        {msg}
+      </div>
       
     </div>
-    <footer><h1>{status}</h1></footer>
+    <footer><h1>Status: {status}</h1></footer>
+    <footer><h1>Accuracy: {accuracy}</h1></footer>
     </>
   )
 }
