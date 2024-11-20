@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios"
-import ClipLoader from "react-spinners/ClipLoader";
+
 
 
 
@@ -14,7 +14,10 @@ export default function App() {
   const [isLocationLoading, setIsLocationLoading] = useState(false);
 
   function locate(){
-    navigator.geolocation.getCurrentPosition((position) => {setLat(position.coords.latitude), setLng(position.coords.longitude), setAccuracy(position.coords.accuracy), setIsLocationLoading(false)}, (err) => {setMsg(err)});
+    navigator.geolocation.getCurrentPosition((position) => {setLat(position.coords.latitude); setLng(position.coords.longitude); setAccuracy(position.coords.accuracy); setIsLocationLoading(false)}, (err) => {setMsg(err)});  
+    if (Math.round(accuracy) > 50 ) {
+      alert("Very low accuracy")
+    }
   }
   
 
@@ -22,8 +25,8 @@ export default function App() {
     try {
       const request = await axios.get(`https://api.olamaps.io/places/v1/nearbysearch?layers=venue&types=restaurant&location=${lat}%2C${lng}&radius=6000&strictbounds=false&withCentroid=false&limit=5&api_key=${import.meta.env.VITE_API_KEY}`);
       const data = request.data.predictions;
-      console.log(request.data);
-      const listplaces = data.map(place => <li key={place.place_id} className="flex flex-col border-2 rounded-xl p-2"><h1 className="text-xl text-transparent font-semibold w-fit bg-gradient-to-r from-cyan-400 to-sky-500 hover:scale-105 bg-clip-text ">{place.structured_formatting.main_text}</h1><h2>{place.structured_formatting.secondary_text}</h2></li>);
+      console.log(request);
+      const listplaces = data.map(place => <li key={place.place_id} className="flex flex-col border-2 rounded-xl p-2"><h1 className="text-xl text-transparent font-semibold w-fit bg-gradient-to-r from-cyan-400 to-sky-500  bg-clip-text ">{place.structured_formatting.main_text}</h1><h2>{place.structured_formatting.secondary_text}</h2></li>);
       setMsg(listplaces);
       setStatus(request.data.status)
     } catch (error) {
@@ -32,6 +35,7 @@ export default function App() {
       setIsResponseLoading(false)
     }
   }
+
 
 
   return (
